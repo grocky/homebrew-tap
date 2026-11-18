@@ -1,0 +1,22 @@
+name: audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  formula:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: Homebrew/actions/setup-homebrew@main
+      - run: brew audit --strict --online grocky/tap/gh-contrib-tui
+      - run: brew install --build-from-source grocky/tap/gh-contrib-tui
+      - run: brew test grocky/tap/gh-contrib-tui
